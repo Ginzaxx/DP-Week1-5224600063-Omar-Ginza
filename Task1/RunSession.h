@@ -1,0 +1,59 @@
+#pragma once
+#include <iostream>
+#include "IInputGenerator.h"
+#include "IScoringRule.h"
+#include "IRewardRule.h"
+#include "ShopSystem.h"
+
+// RunSession controls the game loop and enforces the invariant phase order.
+// It contains NO scoring logic, NO reward logic, and NO input generation logic.
+class RunSession {
+private:
+    IInputGenerator* inputGen;
+    IScoringRule*    scoringRule;
+    IRewardRule*     rewardRule;
+    ShopSystem       shop;
+    int              money;
+    int              totalRounds;
+
+public:
+    RunSession(IInputGenerator* gen,
+               IScoringRule*    scoring,
+               IRewardRule*     reward,
+               int              rounds = 3)
+        : inputGen(gen), scoringRule(scoring), rewardRule(reward),
+          money(0), totalRounds(rounds) {}
+
+    void run() {
+        std::cout << "=== RUN START ===\n\n";
+
+        for (int round = 1; round <= totalRounds; round++) {
+            std::cout << "Round " << round << "\n";
+
+            // Phase 1 - Generate input
+            TurnInput input = inputGen->generate();
+            std::cout << "[PLAY]   input generated: " << input.value << "\n";
+
+            // Phase 2 - Compute base score
+            int baseScore = scoringRule->computeScore(input);
+            std::cout << "[SCORE]  base score: " << baseScore << "\n";
+
+            // Phase 3 - Compute reward
+            int reward = rewardRule->computeReward(baseScore, round);
+            std::cout << "[REWARD] gain: " << reward;
+
+            // Phase 4 - Update money (ONLY here)
+            money += reward;
+            std::cout << " | money: " << money << "\n";
+
+            // Phase 5 - Shop phase
+            shop.runShop(money);
+
+            // Phase 6 - Advance round
+            std::cout << "[ROUND " << round << " END] money: " << money << "\n\n";
+        }
+
+        std::cout << "=== RUN END ===\n";
+        std::cout << "Final money: " << money << "\n";
+    }
+};
