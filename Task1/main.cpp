@@ -1,12 +1,16 @@
+#include <cstdlib>
+#include <ctime>
 #include "RunSession.h"
-#include "FixedInputGenerator.h"
+#include "RandomInputGenerator.h"  
 #include "BasicScoringRule.h"
-#include "SimpleRewardRule.h"
+#include "EvenDoubleRewardRule.h"   
 
 int main() {
-    FixedInputGenerator inputGen;
-    BasicScoringRule    scoringRule;
-    SimpleRewardRule    rewardRule;
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+    RandomInputGenerator inputGen;   
+    BasicScoringRule     scoringRule;
+    EvenDoubleRewardRule rewardRule;  
 
     RunSession session(&inputGen, &scoringRule, &rewardRule, 3);
     session.run();
