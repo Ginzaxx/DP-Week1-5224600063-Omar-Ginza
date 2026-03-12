@@ -1,7 +1,7 @@
 # DP-Week2-Task1 — Balatro-Like Run
 
-Nama: Omar Ginza | NRP: 5224600063
-Course: Design Patterns — Week 2
+**Nama:** Omar Ginza | **NRP:** 5224600063  
+**Course:** Design Patterns — Week 1
 
 ---
 
